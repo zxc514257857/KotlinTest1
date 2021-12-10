@@ -2,6 +2,7 @@ package com.example.app
 
 import android.app.Activity
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import java.lang.ref.WeakReference
 
@@ -16,7 +17,8 @@ import java.lang.ref.WeakReference
  * @Date: 2021/11/30 15:33
  * @Version: V1.0
  */
-class WeakHandler(private val activity: Activity, var listen: (Message?) -> Unit) : Handler() {
+class WeakHandler(private val activity: Activity, var listen: (Message?) -> Unit) :
+    Handler(Looper.getMainLooper()) {
     // 非静态内部类和匿名内部类会默认持有外部类的引用
 
     private val mWeakReference by lazy {

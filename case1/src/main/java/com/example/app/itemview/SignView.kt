@@ -1,11 +1,10 @@
-package com.example.app
+package com.example.app.itemview
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.app.R
 
 /**
  * @Des:

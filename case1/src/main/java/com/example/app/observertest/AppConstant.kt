@@ -14,12 +14,14 @@ class AppConstant {
 
     interface EventCode {
 
-        companion object{
+        companion object {
             const val MAIN_POST: Int = 0x01
             const val ASYNC_POST: Int = 0x02
 
             const val HANDLER_POST1: Int = 0x03
             const val HANDLER_POST2: Int = 0x04
+
+            const val TEST1: Int = 0x05
         }
     }
 }

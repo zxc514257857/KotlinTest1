@@ -1,23 +1,35 @@
 package com.example.app
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.os.SystemClock
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
 import com.example.app.enumtest.CityEnum
 import com.example.app.enumtest.ErrorCodeEnum
+import com.example.app.itemview.SignView
 import com.example.app.observertest.*
 import com.example.app.singtentest.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
+/**
+ * 1、单例写法
+ * 2、Observable使用 发送通知
+ * 3、Handler 通知、延时定时任务、内存泄漏
+ * 4、反射写法
+ *
+ */
 class MainActivity : AppCompatActivity() {
 
     val liveDataModel by lazy {
@@ -30,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         ).get(LiveDataModel::class.java)
     }
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -118,6 +131,7 @@ class MainActivity : AppCompatActivity() {
 //        Looper.prepare()
         val weakHandler = WeakHandler(this) { message ->
             when (message?.what) {
+                // 可以在这里执行更新UI操作
                 AppConstant.EventCode.HANDLER_POST1 -> {
                     Log.e(
                         "TAG",
@@ -141,6 +155,62 @@ class MainActivity : AppCompatActivity() {
         weakHandler.handleMessage(message1)
         weakHandler.sendEmptyMessage(AppConstant.EventCode.HANDLER_POST2)
 
+        // 裸声明Handler的构造方法已经被废弃了，要在构造里面传入 Looper和回调
+        val testHandler = Handler(Looper.getMainLooper(), object : Handler.Callback {
+            override fun handleMessage(msg: Message): Boolean {
+                if (msg.what == AppConstant.EventCode.TEST1) {
+                    Log.e("TAG", "handleMessage: ")
+                    // 可以在这里执行更新UI操作
+                    // 可以写一个UIHandler，专门更新UI操作
+                }
+                // handleMessage这里的返回值的意思是：是同步处理消息还是异步处理消息（true是异步，false是同步，默认是异步处理）
+                return false
+            }
+        })
+        testHandler.sendEmptyMessage(AppConstant.EventCode.TEST1)
+
+        // UIHandler使用
+        UIHandler.post {
+            Log.e("TAG", "UIHandler.post 更新UI")
+        }
+        UIHandler.postDelayed({
+            Log.e("TAG", "UIHandler.postDelayed 更新UI")
+        }, 3000L)
+
+
+        // 延迟执行的任务推荐Handler
+        val delayHandler = Handler(Looper.getMainLooper())
+        // runnable不使用的时候记得remove掉 handler.remove
+        val delayRunnable = Runnable {
+            Log.e("TAG", "delay do sth")
+        }
+        delayHandler.postDelayed(delayRunnable, 3000L)
+
+        // 定时执行的任务推荐Handler和RxJava
+        val timerHandler = Handler(Looper.getMainLooper())
+        val TIMER_CONSTANT = 3000L
+        // runnable不使用的时候记得remove掉 handler.remove
+        // 这里想不出办法解决，只能使用成员变量的方式解决
+//        val timerRunnable = Runnable {
+//            Log.e("TAG", "timerRunnable")
+//            timerHandler.postDelayed(this, TIMER_CONSTANT)
+//        }
+        // 迫不得已的解决方法
+        var timerRunnable: Runnable? = null
+        timerRunnable = Runnable {
+            Log.e("TAG", "timerRunnable")
+            timerHandler.postDelayed(timerRunnable!!, TIMER_CONSTANT)
+        }
+        timerHandler.postDelayed(timerRunnable, TIMER_CONSTANT)
+
+        // RxJava 实现定时任务(这里的Observable是Rxjava的Observable)
+        io.reactivex.Observable.interval(TIMER_CONSTANT, TIMER_CONSTANT, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            // rxandroid要导包
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                Log.e("TAG", "Observable.interval")
+            }
 
         // 反射的写法 获取私有无参和有参方法、获取私有属性（公用的方法和属性也是可以获取到）
         // 私有无参方法
@@ -228,12 +298,16 @@ class MainActivity : AppCompatActivity() {
         rootView.setBackgroundColor(Color.BLACK)
 
         ll.orientation = LinearLayout.HORIZONTAL
-        ll.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        ll.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         ll.gravity = Gravity.CENTER
         ll.setBackgroundColor(Color.RED)
 
         arrayListOf.forEach {
-            it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
+            it.layoutParams =
+                LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
             it.setBackgroundColor(Color.BLUE)
         }
 
