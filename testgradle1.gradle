@@ -1,0 +1,34 @@
+import groovy.xml.XmlUtil
+
+ext {
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def task = output.processManifestProvider.get()
+            if (task == null) {
+                return
+            }
+            task.doLast {
+                def manifestFile = new File(multiApkManifestOutputDirectory.get().asFile, "AndroidManifest.xml")
+                if (manifestFile == null || !manifestFile.exists()) {
+                    return
+                }
+                def parser = new XmlSlurper(false, true)
+                def manifest = parser.parse(manifestFile)
+                def app = manifest.'application'[0]
+                app.'activity'.each { act ->
+                    String value = act.attributes()['android:configChanges']
+                    if (value == null || value.isEmpty()) {
+                        value = "keyboardHidden|screenSize|orientation|locale|touchscreen|fontScale|mcc|mnc|smallestScreenSize|density|layoutDirection|screenLayout|colorMode|keyboard|navigation|uiMode"
+                        act.attributes()['androidconfigChanges'] = value
+                    } else {
+                        value = "keyboardHidden|screenSize|orientation|locale|touchscreen|fontScale|mcc|mnc|smallestScreenSize|density|layoutDirection|screenLayout|colorMode|keyboard|navigation|uiMode"
+                        act.attributes()['android:configChanges'] = value
+                    }
+                }
+                def tmpManifest = XmlUtil.serialize(manifest).replaceAll("androidconfigChanges", "android:configChanges")
+                manifest = parser.parseText(tmpManifest)
+                manifestFile.setText(XmlUtil.serialize(manifest), "utf-8")
+            }
+        }
+    }
+}

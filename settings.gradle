@@ -1,2 +1,4 @@
 rootProject.name = "KotlinTest1"
 include ':case1'
+include ':case2'
+include ':testgradle'

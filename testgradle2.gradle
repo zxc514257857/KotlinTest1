@@ -1,0 +1,6 @@
+ext {
+
+    MyConfig {
+        TEST_CONFIG = 100
+    }
+}
