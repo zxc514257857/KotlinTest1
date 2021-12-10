@@ -29,12 +29,12 @@ class MainActivity : AppCompatActivity() {
         textView.text = "".plus(AppConstant.Cache.test)
         Log.e(TAG, "onCreate: ${AppConstant.Cache.test}")
 
-        val faceStatus = findViewById<ImageView>(R.id.iv_face_status)
-        faceStatus.setOnClickListener {
+        val ivFaceStatus = findViewById<ImageView>(R.id.iv_face_status)
+        ivFaceStatus.setOnClickListener {
             if (!isClick){
-                (faceStatus.background as GradientDrawable).setColor(Color.RED)
+                (ivFaceStatus.background as GradientDrawable).setColor(Color.RED)
             }else {
-                (faceStatus.background as GradientDrawable).setColor(Color.GREEN)
+                (ivFaceStatus.background as GradientDrawable).setColor(Color.GREEN)
             }
             isClick = !isClick
         }
