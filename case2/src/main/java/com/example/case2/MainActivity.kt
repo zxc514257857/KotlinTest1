@@ -31,9 +31,9 @@ class MainActivity : AppCompatActivity() {
 
         val ivFaceStatus = findViewById<ImageView>(R.id.iv_face_status)
         ivFaceStatus.setOnClickListener {
-            if (!isClick){
+            if (!isClick) {
                 (ivFaceStatus.background as GradientDrawable).setColor(Color.RED)
-            }else {
+            } else {
                 (ivFaceStatus.background as GradientDrawable).setColor(Color.GREEN)
             }
             isClick = !isClick
