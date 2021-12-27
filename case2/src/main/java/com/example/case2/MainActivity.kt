@@ -14,7 +14,6 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private var isClick: Boolean = false
 
-    // 我在master分支中开发内容
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
