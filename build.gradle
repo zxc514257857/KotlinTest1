@@ -1,6 +1,5 @@
 //apply from: "../testgradle1.gradle"
 
-
 buildscript {
     repositories {
         google()
