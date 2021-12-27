@@ -257,6 +257,8 @@ class MainActivity : AppCompatActivity() {
         // Grow 和 sublime中的内容移到这里来
         // 手机备忘录中的内容整理 移植到这里来
         // 在服务中开启广播逻辑 熟悉一下
+
+        // 学习Git图谱，多看git图谱，多想git图谱；；；多思考下git 图谱每个线和点的含义
     }
 
     @Volatile
@@ -331,6 +333,3 @@ class MainActivity : AppCompatActivity() {
         Log.e("TAG", "test1: $a") // 1
     }
 }
-
-// 主分支1   1
-// 主分支1   2
