@@ -28,7 +28,9 @@ import kotlin.random.Random
  * 2、Observable使用 发送通知
  * 3、Handler 通知、延时定时任务、内存泄漏
  * 4、反射写法
- *
+ * 5、addView写法
+ * 6、kotlin扩展函数使用
+ * 7、在Test类中运行Java代码
  */
 class MainActivity : AppCompatActivity() {
 
@@ -384,22 +386,3 @@ class StringGenerator : Generator<String> {
         return "my generate ${obj as Int + Random.nextInt(20)}"
     }
 }
-
-//class UnKnownGenerator<T>: Generator<T>{
-//    override fun generate(obj: Any?): T {
-//
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-

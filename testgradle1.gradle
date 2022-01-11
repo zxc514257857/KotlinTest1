@@ -1,8 +1,10 @@
 import groovy.xml.XmlUtil
 
 ext {
+    // 这里可能会出现不生效情况
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
+            // 如果上面不生效，从这里开始引用使用
             def task = output.processManifestProvider.get()
             if (task == null) {
                 return

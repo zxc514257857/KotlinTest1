@@ -22,6 +22,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * 1、Observer 发送自定义事件类型（可以写常量或者枚举都行）
+ * 2、权限请求方式写法
+ * 3、本地写日志工具类
+ * 4、建造者模式的写法
+ */
 class MainActivity : AppCompatActivity() {
 
     val REQUEST_CODE = 888
@@ -35,15 +41,16 @@ class MainActivity : AppCompatActivity() {
         val baseObservable = BaseObservable<EventBean<Any?>>()
         baseObservable.addObserver { o, arg ->
             val eventBean = arg as EventBean<*>
-            if (eventBean.code == 0x01) {
+            if (eventBean.code == AppConstant.EventCode.code1) {
                 Log.e("TAG", "baseObservable1: ${eventBean.data[0]}")
-            } else if (eventBean.code == 0x02) {
+            } else if (eventBean.code == AppConstant.EventCode.code2) {
                 Log.e("TAG", "baseObservable2: ${eventBean.data[0] as Person.Builder}")
             }
         }
         baseObservable.updateData(
             EventBean(
-                0x01,
+//                AppConstant.EventCode.code1,
+                EventCodeEnum.CODE1.code,
                 "test1"
             )
         )
@@ -51,7 +58,8 @@ class MainActivity : AppCompatActivity() {
         builder.name("111").sex("nan").build()
         baseObservable.updateData(
             EventBean(
-                0x02,
+//                AppConstant.EventCode.code2,
+                EventCodeEnum.CODE2.code,
                 builder
             )
         )

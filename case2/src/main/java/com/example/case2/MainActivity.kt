@@ -9,6 +9,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.ActivityUtils
 
+/**
+ * 1、application lib和android lib的不同
+ * 2、静态变量的生命周期是整个应用程序
+ * 3、gradle脚本的使用
+ * 4、android反编译工具的使用
+ * 5、make project和rebuild project的区别
+ */
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
@@ -53,6 +60,13 @@ class MainActivity : AppCompatActivity() {
         // 使用gradle脚本动态替换Manifest文件中的内容
         // gradle是编译时生效  java代码是运行时生效
         // 在module的build.gradle文件中配置了编译时替换configChanges逻辑 ：：：见本build.gradle配置
+        // 通过gradle脚本修改Manifest文件中的内容，修改完成然后编译一下，在build-intermediates-packaged_manifests查看Manifest文件是否修改成功
+
+//        BuildConfig.TEST_CONFIG
+
+
+
+
 
         // android 反编译
         // 需要使用这三个软件： apktool、dex2jar和JD-gui
@@ -66,8 +80,6 @@ class MainActivity : AppCompatActivity() {
         // Build栏目下 Make Project 和Rebuild Project的区别
         // Make Project 是增量编译，不Clean，比Rebuild Project快
         // Rebuild Project 是先Clean再编译，速度比较慢
-
-//        BuildConfig.TEST_CONFIG
 
     }
 

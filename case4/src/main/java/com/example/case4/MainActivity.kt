@@ -4,18 +4,31 @@ import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.Log
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.LongAdder
 import java.util.function.IntBinaryOperator
-import java.util.function.IntUnaryOperator
 import kotlin.concurrent.thread
 
+/**
+ * 1、lateinit的使用规则，只适用于引用数据类型
+ * 2、return作用域问题，只作用在本方法内，不作用于整个应用程序中
+ * 3、gradle插件依赖加速
+ * 4、AS中的搜索栏，AWR字母筛选
+ * 5、AS中git的回滚和暂存功能的使用
+ * 6、AS中lib module和application module的功能区别和显示区别
+ * 7、List中的remove first和 remove last的功能
+ * 8、Android中Pire ， Triple和 Map的区别
+ * 9、Android中 Atomic 常量自增功能（变量原子性）
+ * 10、Android中 Volatile 修饰的方法，保证变量的原子性
+ * 11、Android中 longAdder比AtomicLong的性能会更好一点，也是保证变量的原子性
+ * 12、如果Bean中有公用的内容，可以抽出来一个基类Bean，其他的Bean继承这个Bean即可
+ * 13、kotlin中的代码简化逻辑研究
+ * 14、Android中Shell命令学习
+ */
 class MainActivity : AppCompatActivity() {
 
     // lateinit 后面跟的是引用数据类型，跟基本数据类型不能用lateinit
@@ -159,16 +172,16 @@ class MainActivity : AppCompatActivity() {
         // 模拟一个累加操作
         val atomicInteger1 = AtomicInteger(1)
         var incrementAndGet = 1
-        for(a in 1 until 5){
+        for (a in 1 until 5) {
             Log.e("TAG", "aaaa: $a")
             incrementAndGet = atomicInteger1.incrementAndGet()
         }
         Log.e("TAG", "incrementAndGet: $incrementAndGet")
 
 
-        //https://zhuanlan.zhihu.com/p/138819184
-        // volatile 不稳定的  ，它保护的是变量的安全，不能保护线程的安全
-        // 它保证变量对所有线程可见。即其他线程修改了这个值，它保证新值对其他所有线程是可见的 ； volatile能够禁止指令重排
+        // https://zhuanlan.zhihu.com/p/138819184
+        // volatile 不稳定的 ，它保护的是变量的安全，不能保护线程的安全
+        // 它保证变量对所有线程可见。即其他线程修改了这个值，它保证新值对其他所有线程是可见的；volatile能够禁止指令重排
 //        Volatile和Synchronized四个不同点：
 //        1 粒度不同，后者锁对象和类，前者针对变量
 //        2 syn阻塞，volatile线程不阻塞
@@ -177,14 +190,15 @@ class MainActivity : AppCompatActivity() {
         // 高并发三大特性：原子性、有序性和可见性 （volatile 满足可见性和有序性，不满足原子性）
 
         // 无法重现volatile的作用
-        // 不管在主线程还是在子线程对变量值进行修改，加不加volatile的作用都是一样的，，，这就离谱
+        // 不管在主线程还是在子线程对变量值进行修改，加不加volatile的作用都是一样的，都是可以线程同步的；；这说明可能kotlin代码中已经默认进行了线程同步
+        // 在java代码中可能是没有实现这个线程同步功能
         testVolatile()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // 也是为了解决long类型的多线程同步问题，比AtomaticLong 性能更好一点 ；AtomicLong的性能差一点
             // longAdder能够实现变量的原子性；如果对象值的同步，那是否就能使用sync、以及volatile进行同步了呢？
             val longAdder = LongAdder()
-            for(i in 0 until 10){
+            for (i in 0 until 10) {
                 thread {
                     longAdder.increment()
                     Log.e("TAG", "线程:${Thread.currentThread().name}, longAdder的值：${longAdder}")
@@ -196,12 +210,6 @@ class MainActivity : AppCompatActivity() {
 
         // xCrash 捕获崩溃，包括java崩溃、native崩溃和anr   爱奇艺提供的崩溃日志捕获工具
         // https://github.com/iqiyi/xCrash
-
-        // 表示获取当前分支的 commit版本数量 可以当做 appVersionCode使用
-        // def gitVersionCode() {
-        //    def cmd = 'git rev-list HEAD --first-parent --count'
-        //    cmd.execute().text.trim().toInteger()
-        //}
 
         // 如果一个Bean中有共有的 内容，可以提取出来一个Bean ，其他的Bean继承这个Bean
         val goodsDataBean = GoodsDataBean()
@@ -222,43 +230,56 @@ class MainActivity : AppCompatActivity() {
 
 //        tv.setOnClickListener { it -> }
 
-        // let  apply  also  run  with  内联扩展函数   熟悉一下 提示代码里面传入的参数
 
-        // ?. 和 ?: 以及return的连用
-        Log.e("TAG2", "return : ${test4()}")  // return : true
-
-
-        "aaa".let {
-
-        }
-
-
-
-
-
-        // 传的Context 全部都用SoftReference进行包裹一下  SoftReference<Context>
-
-        // 自定义Exception   STChipFailException
-
-
-        // 协程使用    将执行分发到 UI线程
-        GlobalScope.launch(Dispatchers.IO) {
-
-        }
-        // 将执行分发到主线程
-        CoroutineScope(Dispatchers.Main).launch {
-
-        }
-
-        loadData()
-        loadData1()
-
-        // android 中的变体配置。。。。。。  新建一个module   现在因为变体没配好 apk打包也打不了了  todo 目前先注释掉了
-        // Grow 和 sublime中的内容移到这里来
-        // 手机备忘录中的内容整理 移植到这里来
-        // 在服务中开启广播逻辑 熟悉一下
-
-        // 学习Git图谱，多看git图谱，多想git图谱；；；多思考下git 图谱每个线和点的含义
+        // android shell命令学习
+//        1、活用tab键补全命令行
+//        2、https://blog.csdn.net/codehxy/article/details/49763701 这个文章写的比较好
+//
+//        adb shell
+//        $ su
+//        # cd data  // 在data目录新增的文件一般是可读可写可执行，在sdcard目录新增的文件一般不可执行
+//        # exit  // exit能够退出su权限
+//        $ ls
+//        ls: .: Permission denied   // 不授予su权限连读的权限都没有了
+//        $ su
+//        # ls -al  // 查看所有文件权限   第一位d表示文件夹，-表示文件，三组表示不同的用户，第一组表示所有者权限，第二组表示所属组权限，第三组表示其他人权限
+//        rwx 表示可读可写可执行
+//        # cd sdcard
+//        # mkdir 111  // 创建文件夹
+//        # touch 222.txt  // 创建文件
+//        # rm 222.txt  //  删除文件
+//        # rm -r 111 333  // 删除文件夹 多个用空格隔开
+//        # rm -rf  // 强制删除文件夹
+//        # chmod 777 startWifiAdb.sh  // 授予文件可读可写可执行权限（默认sdcard下没有这种权限，执行之后也是授予失败）
+//        # exit
+//        $ cd ..
+//        $ cd data
+//        $ su
+//        # cp startWifiAdb.sh sss.sh  // 拷贝文件（当前目录下）
+//        # cp startWifiAdb.sh /sdcard/sss.sh   // 拷贝文件（其他当前目录下）
+//        # exit
+//        $ exit
+//        adb push C:\Users\Administrator\Desktop\stop.sh /data
+//        adb: error: failed to copy 'C:\Users\Administrator\Desktop\stop.sh' to '/data/stop.sh': remote couldn't create file: Permission denied      // 直接push到data目录没有权限，考虑push到sdcard目录再sp到data目录
+//        adb push C:\Users\Administrator\Desktop\stop.sh /sdcard
+//        1 file pushed, 0 skipped. 0.1 MB/s (68 bytes in 0.000s)
+//        adb pull sdcard/stop.sh C:\Users\Administrator\Desktop
+//        sdcard/stop.sh: 1 file pulled, 0 skipped. 0.0 MB/s (63 bytes in 0.015s)
+//        adb shell
+//        $ cd sdcard
+//        $ sp stop.sh /data     // 拷贝文件到data目录
+//                cp: /data/stop.sh: Permission denied    // stop.sh 从sdcard目录拷贝过来的文件执行权限不足，需要授予权限
+//        $ su
+//        # cp stop.sh /data    // 从sdcard目录拷贝过来的文件也是权限不足，需要授予权限
+//        /data # chmod - R 777 stop.sh   // data目录授予权限成功（data目录文件好授予权限，sdcard目录不好授予， 这里的R必须大写）
+//        # cat stop.sh     // 查看文件中的内容
+//                adb shell su 0 rm -r data/eee.sh  // adb shell su执行多条指令 这里的0有时为-c； adb shell；su；rm -r data/eee.sh 组合指令；可以通过一个bat脚本执行多个这样的指令
+//        # cd system/bin   // 查看这里面的内容就是可以执行的命令
+//        # ls
+//        # cd system
+//        # cat build.prop       // 查看系统可以通过setprop设置的属性
+//        # ./startWifiAdb.sh    // 执行startWifiAdb.sh文件，如果文件在当前目录下
+//        # data/startWifiAdb.sh    // 执行data目录下的startWifiAdb.sh文件
     }
 
     @Volatile
@@ -269,46 +290,11 @@ class MainActivity : AppCompatActivity() {
             click = false
             Log.e("TAG", "click2:")
         }
-        while(click){
+        while (click) {
             Log.e("TAG", "click1:")
         }
     }
 
-    private fun test4(): Boolean {
-        var aaa: String? = ""   // aaa不为null  返回true
-//        aaa = null  // aaa为null  返回false
-        // 这段话的意思是，不为null 返回true 为null返回false
-        val block = aaa?.let {
-            true
-        } ?: false
-        return block
-    }
-
-    val uiScope1 = CoroutineScope(Dispatchers.Main)
-    fun loadData() = uiScope1.launch {
-        tv.text = "hahhahah"
-        // 这两个是串行执行的
-        val result1 = withContext(Dispatchers.IO) {
-            delay(2000)
-            // 无法执行
-//            tv.text = "hahhahah1"
-            Log.e("TAG", "loadData1: ${Thread.currentThread().name}")
-            "result1"
-        }
-        val result2 = withContext(Dispatchers.IO) {
-            delay(1000)
-//            tv.text = "hahhahah2"
-            Log.e("TAG", "loadData2: ${Thread.currentThread().name}")
-            "result2"
-        }
-        Log.e("TAG", "result1:${result1},,,result2:${result2}")
-    }
-
-    fun loadData1() = GlobalScope.launch(Dispatchers.Main) {
-        delay(2000)
-//        Dispatchers.IO 会闪退    Dispatchers.Main 不会
-//        tv.text = "hahhahah1"
-    }
 
     private fun testReturn() {
         var a = 1

@@ -1,6 +1,9 @@
 //apply from: "../testgradle1.gradle"
 
 buildscript {
+    ext {
+        kotlin_version = '1.5.31'
+    }
     repositories {
         google()
         mavenCentral()
