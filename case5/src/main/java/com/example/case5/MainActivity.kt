@@ -1,10 +1,14 @@
 package com.example.case5
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.ServiceUtils
 import kotlinx.coroutines.*
 import java.lang.ref.SoftReference
 
@@ -15,7 +19,9 @@ import java.lang.ref.SoftReference
  * 4、通过SoftReference进行 Context上下文的传递或获取
  * 5、自定义Exception
  * 6、Git图谱学习
- *
+ * 7、在服务中开启广播（广播没有像Activity和Service 有Utils类）
+ * 8、通过Activity常量和Service常量跳转Activity和Service  以及服务和广播的关闭
+ * 9、
  * 
  */
 class MainActivity : AppCompatActivity() {
@@ -128,6 +134,26 @@ class MainActivity : AppCompatActivity() {
         // HEAD就是一个指针 指向当前所在分支的本地分支
         // 分为master分支、develop分支，在dev分支上开发，定期将稳定的版本同步到master分支上即可。所有的开发人员基于dev分支再建分支进行开发，
         // 调试bug等，改完之后，再合并到dev分支上去，这样就会保证一直维护的是一套代码，而不是多个分支的代码
+
+        // git中 cherry-pick 功能使用。在本分支上选择其他分支修改的节点内容，右键选择Cherry-Pick，即可把修改的内容合并到本分支上
+        // git中 Merge Changes 功能使用。在本分支上选择哪个分支合并到本分支上
+
+        // 在服务中开启广播
+//        startService(Intent(this, MonitorService::class.java))
+
+        // 通过包名和常量跳转activity和广播
+        // 通过包名和类名 字符串进行跳转
+        ServiceUtils.startService(ServiceConstant.MONITOR_SERVICE)
+        tv.setOnClickListener {
+            ActivityUtils.startActivity(this.packageName, ActivityConstant.TEST_HOME)
+            ServiceUtils.stopService(ServiceConstant.MONITOR_SERVICE)
+            finish()
+        }
+
+
+        // 数据库的查询字段 命令学习 -- 明天试试
+
+
     }
 
     private fun initView() {
