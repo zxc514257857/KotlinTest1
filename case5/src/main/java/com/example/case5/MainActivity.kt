@@ -21,8 +21,8 @@ import java.lang.ref.SoftReference
  * 6、Git图谱学习
  * 7、在服务中开启广播（广播没有像Activity和Service 有Utils类）
  * 8、通过Activity常量和Service常量跳转Activity和Service  以及服务和广播的关闭
- * 9、
- * 
+ * 9、sql查询语句学习
+ * 10、sqlite3数据库查询命令
  */
 class MainActivity : AppCompatActivity() {
 
@@ -150,10 +150,19 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
+        // 数据库的查询字段 命令学习(SQL查询语句)
+        // SELECT * FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY  查询此表中的所有条数据
+        // SELECT * FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY WHERE VERSION_INDEX = 2  查询此表中version_index为2的数据
+        // SELECT count(*) FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY WHERE VERSION_INDEX = 2  查询此表中version_index为2的数据总数
+        // select count(*) FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY where VERSION_INDEX between 1 and 6 group by VERSION_INDEX  根据1-6重新分组查询
+        // select version_index,count(*) from PHYSIC_CARD_NOBLACK_LIST_ENTITY group by version_index
 
-        // 数据库的查询字段 命令学习 -- 明天试试
-
-
+        // sqlite数据库查询命令
+        // adb shell
+        // cd sdcard/Download/whpe/runshare/com.whpe.pos.hubei.wuhan/
+        // sqlite3 whpepos.db
+        // .table
+        // select version_index,count(*) from PHYSIC_CARD_NOBLACK_LIST_ENTITY group by version_index;
     }
 
     private fun initView() {
