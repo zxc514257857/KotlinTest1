@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             it.add("冰敦敦")
             it.add("雪融融")
             it.add("雪融融")
+            it.add("雪融融")
         }
         // 学习一下方法中以方法作为参数的写法  -- 高阶函数
         test { i, j ->
