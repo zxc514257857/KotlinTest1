@@ -1,9 +1,11 @@
 package com.example.case5
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.ServiceUtils
@@ -118,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         val context = softReference.get()
 
         // 自定义Exception的写法
-        // 如果exception被catch住 通过system.err会精准过滤出来，也可以通过Warn Tag过滤；如果抛出Exception，可以通过Exception进行过滤
+        // 如果exception被catch住 通过system.err会精准过滤出来，也可以通过Worn Tag过滤；如果抛出Exception，可以通过Exception进行过滤
         testException()
 
         // Git图谱学习 - git graph图
@@ -135,7 +137,6 @@ class MainActivity : AppCompatActivity() {
 
         // git中 cherry-pick 功能使用。在本分支上选择其他分支修改的节点内容，右键选择Cherry-Pick，即可把修改的内容合并到本分支上
         // git中 Merge Changes 功能使用。在本分支上选择哪个分支合并到本分支上
-        // git中 Drop Commits 功能使用。就是删除本次选择的提交内容
 
         // 在服务中开启广播
 //        startService(Intent(this, MonitorService::class.java))
@@ -154,7 +155,7 @@ class MainActivity : AppCompatActivity() {
         // SELECT * FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY WHERE VERSION_INDEX = 2  查询此表中version_index为2的数据
         // SELECT count(*) FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY WHERE VERSION_INDEX = 2  查询此表中version_index为2的数据总数
         // select count(*) FROM PHYSIC_CARD_NOBLACK_LIST_ENTITY where VERSION_INDEX between 1 and 6 group by VERSION_INDEX  根据1-6重新分组查询
-        // select version_index,count(*) from PHYSIC_CARD_NOBLACK_LIST_ENTITY group by version_index  在此表中根据version_index进行分组查询
+        // select version_index,count(*) from PHYSIC_CARD_NOBLACK_LIST_ENTITY group by version_index
 
         // sqlite数据库查询命令
         // adb shell
@@ -162,8 +163,6 @@ class MainActivity : AppCompatActivity() {
         // sqlite3 whpepos.db
         // .table
         // select version_index,count(*) from PHYSIC_CARD_NOBLACK_LIST_ENTITY group by version_index;
-
-        // Println打印出来的内容，可以通过 System.out 关键字进行过滤
     }
 
     private fun initView() {
@@ -320,7 +319,7 @@ class MainActivity : AppCompatActivity() {
         // 伪造异常  符合这种情况抛出异常
         val isInitialized = false
 //        val a = 1 / 0
-        if (!isInitialized) {
+        if(!isInitialized){
             throw STChipFailException("加密芯片初始化失败")
         }
     }
