@@ -1,3 +1,0 @@
-ext {
-    buildscript.dependencies.kotlin_version = "1.5.31"
-}

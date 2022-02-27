@@ -1,0 +1,127 @@
+/**
+ *  全局统一配置文件
+ */
+ext {
+    // true 每个业务Module可以单独开发
+    // false 每个业务Module以lib的方式运行
+    // 修改之后需要Sync方可生效
+    isModule = false
+
+    // 版本号
+    versions = [
+            applicationId              : "",        //应用ID
+            compileSdkVersion          : 28,
+            buildToolsVersion          : "28.0.3",
+            minSdkVersion              : 19,
+            targetSdkVersion           : 28,
+            versionCode                : 1,                    //版本号
+            versionName                : "1.0.0",              //版本名称
+
+            androidSupportSdkVersion   : "28.0.0",
+            constraintLayoutVersion    : "1.1.3",
+            runnerVersion              : "1.0.2",
+            espressoVersion            : "3.0.2",
+            junitVersion               : "4.12",
+            annotationsVersion         : "24.0.0",
+            javaSDKVersion             : 1.8,//javaSDK版本
+
+            multidexVersion            : "1.0.2",
+            butterknifeVersion         : "8.8.1",
+            arouterApiVersion          : "1.4.0",
+            arouterCompilerVersion     : "1.2.1",
+            arouterannotationVersion   : "1.0.4",
+            eventbusVersion            : "3.0.0",
+            loggerVersion              : "2.2.0",
+            glideVersion               : "4.9.0",
+            glideTransformationsVersion: "4.0.0",
+            picassoVersion             : "2.5.2",
+            greendaoVersion            : "3.2.2",
+            databaseSqlcipherVersion   : "3.5.7",
+            rx2JavaVersion             : "2.1.6",
+            rx2AndroidVersion          : "2.0.1",
+            rxPermissionVersion        : "0.9.5",
+            rxLifeCycleVersion         : "2.2.1",
+            okhttpVersion              : "3.3.1",
+            retrofitVersion            : "2.3.0",
+            urlconnectionVersion       : "3.2.0",
+            gsonVersion                : "2.2.8",
+            draggerVersion             : "2.14.1",
+            guavaVersion               : "28.0-jre",
+    ]
+
+    dependencies = [
+            "appcompat_v7"           : "com.android.support:appcompat-v7:${versions["androidSupportSdkVersion"]}",
+            "constraint_layout"      : "com.android.support.constraint:constraint-layout:${versions["constraintLayoutVersion"]}",
+            "runner"                 : "com.android.support.test:runner:${versions["runnerVersion"]}",
+            "espresso_core"          : "com.android.support.test.espresso:espresso-core:${versions["espressoVersion"]}",
+            "junit"                  : "junit:junit:${versions["junitVersion"]}",
+            "support_annotations"    : "com.android.support:support-annotations:${versions["annotationsVersion"]}",
+            "design"                 : "com.android.support:design:${versions["androidSupportSdkVersion"]}",
+            "support-v4"             : "com.android.support:support-v4:${versions["androidSupportSdkVersion"]}",
+            "cardview-v7"            : "com.android.support:cardview-v7:${versions["androidSupportSdkVersion"]}",
+            "recyclerview-v7"        : "com.android.support:recyclerview-v7:${versions["androidSupportSdkVersion"]}",
+
+            // 方法数超过65535解决方法64K MultiDex分包方法
+            "multidex"               : "com.android.support:multidex:${versions["multidexVersion"]}",
+
+            // 路由
+            "arouter_api"            : "com.alibaba:arouter-api:${versions["arouterApiVersion"]}",
+            "arouter_compiler"       : "com.alibaba:arouter-compiler:${versions["arouterCompilerVersion"]}",
+            "arouter_annotation"     : "com.alibaba:arouter-annotation:${versions["arouterannotationVersion"]}",
+
+            // 黄油刀
+            "butterknife_compiler"   : "com.jakewharton:butterknife-compiler:${versions["butterknifeVersion"]}",
+            "butterknife"            : "com.jakewharton:butterknife:${versions["butterknifeVersion"]}",
+
+            // 事件订阅
+            "eventbus"               : "org.greenrobot:eventbus:${versions["eventbusVersion"]}",
+
+            // 数据库
+            "greendao"               : "org.greenrobot:greendao:${versions["greendaoVersion"]}",
+            // 使用加密数据库时需要添加，使用后会apk会变大很多，如果对安全性要求不高，不建议使用
+            "database_sqlcipher"     : "net.zetetic:android-database-sqlcipher:${versions["databaseSqlcipherVersion"]}",//compileOnly
+
+            // 日志
+            "logger"                 : "com.orhanobut:logger:${versions["loggerVersion"]}",
+
+            // 图片加载
+            "picasso"                : "com.squareup.picasso:picasso:${versions["picassoVersion"]}",
+            "glide"                  : "com.github.bumptech.glide:glide:${versions["glideVersion"]}",
+            "glide_transformations"  : "jp.wasabeef:glide-transformations:${versions["glideTransformationsVersion"]}@aar",
+            "glidecompiler"          : "com.github.bumptech.glide:compiler:${versions["glideVersion"]}",//annotationProcessor
+
+            // 权限申请
+            "rxpermission"           : "com.tbruyelle.rxpermissions2:rxpermissions:${versions["rxPermissionVersion"]}@aar",
+
+            // RxLifeCycle
+            "rxlifecycle"            : "com.trello.rxlifecycle2:rxlifecycle:${versions["rxLifeCycleVersion"]}",
+            "rxlifecycle_andoird"    : "com.trello.rxlifecycle2:rxlifecycle-android:${versions["rxLifeCycleVersion"]}@aar",
+
+            // 网络请求
+            "okhttp"                 : "com.squareup.okhttp3:okhttp:${versions["okhttpVersion"]}",
+            "retrofit"               : "com.squareup.retrofit2:retrofit:${versions["retrofitVersion"]}",
+            "retrofit_converter_gson": "com.squareup.retrofit2:converter-gson:${versions["retrofitVersion"]}",
+            "retrofit_adapter_rxjava": "com.squareup.retrofit2:adapter-rxjava2:${versions["retrofitVersion"]}",
+            // JavaNetCookieJar来实现非持久化cookie
+            "okhttp_urlconnection"   : "com.squareup.okhttp3:okhttp-urlconnection:${versions["urlconnectionVersion"]}",
+
+
+            // 依赖注入
+            "dagger"                 : "com.google.dagger:dagger:${versions["draggerVersion"]}",
+            "dagger_compiler"        : "com.google.dagger:dagger-compiler:${versions["draggerVersion"]}",
+
+            // gson解析
+            "gson"                   : "com.google.code.gson:gson:${versions["gsonVersion"]}",
+
+            // guava 谷歌提供的工具扩展库,提供用于集合，缓存，支持原语，并发性，常见注解，字符串处理，I/O和验证的实用方法
+            "guava"                  : "com.google.guava:guava:${versions["guavaVersion"]}",
+    ]
+
+    apkPath = "release"
+    appName = "app"
+    buildTime = packageTime()
+}
+
+private def packageTime(){
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}

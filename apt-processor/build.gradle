@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    // 扫描注解的lib 添加依赖
+    implementation project(path: ':apt-annotation')
+
+    // 自动注册，动态生成 META-INF/...文件
+    implementation 'com.google.auto.service:auto-service:1.0-rc6'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
+    // 用来生成java文件的，避免字符串拼接的尴尬
+    implementation 'com.squareup:javapoet:1.10.0'
+}

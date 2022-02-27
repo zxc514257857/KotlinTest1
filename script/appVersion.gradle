@@ -1,0 +1,23 @@
+ext {
+    version = [
+            code: 1,
+    ]
+}
+ext.version = [
+        name : '1.0.0'
+]
+
+// gradle task的生命周期
+task task1 {
+    // doFirst 会在task开始时调用
+    doFirst{ println("task1") }
+}
+
+task task2 {
+    // doLast 会在task结束时调用
+    doLast { println("task2") }
+}
+task1.finalizedBy(task2)
+task1.dependsOn(task2)
+task1.mustRunAfter(task2)
+task1.shouldRunAfter(task2)

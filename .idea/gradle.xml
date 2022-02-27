@@ -10,12 +10,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/apt-annotation" />
+            <option value="$PROJECT_DIR$/apt-processor" />
             <option value="$PROJECT_DIR$/case1" />
             <option value="$PROJECT_DIR$/case2" />
             <option value="$PROJECT_DIR$/case3" />
             <option value="$PROJECT_DIR$/case4" />
             <option value="$PROJECT_DIR$/case5" />
             <option value="$PROJECT_DIR$/case6" />
+            <option value="$PROJECT_DIR$/case7" />
             <option value="$PROJECT_DIR$/testgradle" />
           </set>
         </option>

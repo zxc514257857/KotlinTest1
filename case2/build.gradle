@@ -3,10 +3,24 @@ plugins {
     id 'kotlin-android'
 }
 
-// 在自己的上级目录，要..返回上级目录  通过这种方式可以引入
-// 引入修改 configChanges属性，保证过滤重进activity的情况
-apply from: "../testgradle1.gradle"
-//apply from: "../testgradle2.gradle"
+// ..表示返回上一级目录，即为testgradle同级目录
+apply from:"../script/changeConfig.gradle"
+// Could not get unknown property 'applicationVariants' for extension 'android' of type com.android.build.gradle.LibraryExtension.
+// 在lib的module中会出现这样的报错。原因就是 applicationVariants 只包含在 apply plugin: 'com.android.application' 插件中
+// 如果要在 'com.android.library' 插件中使用，则使用如下方法：
+// buildTypes {
+//    release {
+//        libraryVariants.all { variant ->
+//            appendVersionName(variant, defaultConfig)
+//        }
+//    }
+// }
+
+// 自己写的生成app名字的gradle脚本
+//apply from:"../script/createAppName.gradle"
+
+// 对内容的添加是在同级目录，，，对内容的修改是在上级目录。。比如createAppName是在case2-build.gradle目录
+// config和appVersion是在project-build.gradle目录
 
 android {
     compileSdkVersion 30
@@ -16,24 +30,121 @@ android {
         applicationId "com.example.case2"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        // appVersion.gradle
+//        versionCode rootProject.ext.version.code
+        versionCode 5
+        versionName rootProject.ext.version.name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        addBaseConfig()
     }
 
     buildTypes {
         release {
+            // 开启混淆
+            minifyEnabled false
+            // 检查未被使用的资源  不打包到apk中，并不是实际将资源删除掉了
+            shrinkResources false
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("boolean", "isApp", isAPP)
+        }
+        debug{
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField("boolean", "isApp", isAPP)
         }
     }
     compileOptions {
+        // 设置源文件的编译版本
+        encoding = "utf-8"
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            println "-------------> full name = ${output.name}, ${variant.buildType.name}, ${output.baseName}, path = ${project.rootDir.absolutePath}, apkpath = ${rootProject.ext.apkPath}, ${output.name}"
+
+            def file = output.outputFile
+            if (null != file && file.name.endsWith('.apk')) {
+                def fileName = ""
+                if (null != rootProject.appName) fileName += "${rootProject.appName}"
+                if (null != defaultConfig.applicationId) fileName += "_${defaultConfig.applicationId}"
+                if (null != defaultConfig.versionCode) fileName += "_[code${defaultConfig.versionCode}"
+                if (null != versionName) fileName += "_nameV${versionName}]"
+                if (null != output.name) fileName += "_${output.name}"
+                if (null != rootProject.ext.buildTime) fileName += "_${rootProject.ext.buildTime}"
+                fileName += ".apk"
+                fileName = fileName.replaceAll(" ", "_").replace("-", "")
+                if (!"debug".equalsIgnoreCase(variant.buildType.name)) {
+                    def subPath = output.name.replace("-", "")
+                    if (subPath.endsWith("release")) {
+                        subPath = subPath.replace("release", "Release")
+                    }
+                    variant.getPackageApplicationProvider().get().outputDirectory = new File(project.rootDir.absolutePath + "/${rootProject.apkPath}/${subPath}")
+                }
+                outputFileName = fileName
+            }
+        }
+    }
+
+    // 风味维度（用什么字段来区分产品风味）
+    flavorDimensions "city"
+    productFlavors {
+        WUHAN {
+            dimension "city"
+            versionName "1.0.32 WuHan"
+            // 动态添加字段
+            buildConfigField("String", "url", "\"www.wuhan.com\"")
+            // 动态添加资源
+            resValue("string", "welcome", "Welcome WuHan")
+        }
+        HANGZHOU {
+            dimension "city"
+            versionName "1.0.5 HangZhou"
+            buildConfigField("String", "url", "\"www.hangzhou.com\"")
+            // 动态添加资源
+            resValue("string", "welcome", "Welcome HangZhou")
+        }
+    }
+
+    // adb配置选项
+    adbOptions {
+        // 设置执行adb命令的超时时间
+        timeOutInMs = 5 * 1000
+        /**
+         * 设置adb install安装这个操作的设置项
+         * -l:锁定应用程序
+         * -r:替换已存在的应用程序
+         * -t:允许测试包
+         * -s:把应用程序安装到SD卡上
+         * -d:允许应用程序降级安装
+         * -g:为该应用授予所有运行时的权限
+         */
+        installOptions "-r"
+    }
+    // dex配置选项
+    // dex突破65535方法数限制  android 5.0以前 使用的Dalvik虚拟机只支持单个dex文件，需要使用MultiDex库；android 5.0以后 使用ART虚拟机
+    // 可以支持多个dex文件。一个dex文件的最多方法数为65535个
+    dexOptions {
+        // 设置是否启用dx增量模式
+        incremental true
+        // 设置执行dx命令为其分配的最大堆内存
+        javaMaxHeapSize '4g'
+        // 设置是否开启jumbo模式，如果项目方法数超过65535，需要开启jumbo模式才能构建成功
+        jumboMode true
+        // 设置Android Gradle运行dx命令时使用的线程数量，可提高dx执行的效率
+        threadCount 2
+        /**
+         * 设置是否执行dex Libraries库工程,开启后会提高增量构建的速度，会影响clean的速度，默认为true
+         * 使用dx的--multi-dex选项生成多个dex,为避免和库工程冲突，可设置为false
+         */
+        preDexLibraries true
+
     }
 }
 
@@ -50,4 +161,19 @@ dependencies {
 
     implementation project(path: ':testgradle')
     implementation 'com.blankj:utilcodex:1.31.0'
+}
+
+def addBaseConfig(){
+    // name的默认值是whpe
+    def name = "\"whpe\""
+    try{
+        // cityName 是可以直接从gradle文件中到properties中间中获取的
+        name = cityName
+    } catch(Exception e){
+        e.printStackTrace()
+        println "error = $e, name = $name"
+    }
+    println "build cityName = $name"    // build cityName = "AnHui_TongLing"
+    // 写在自定义的properties文件中好像不行，还是要写在gradle.properties文件中才能引用到
+    project.extensions.findByName("android")?.defaultConfig?.buildConfigField ("String", "cityName", "${name}")
 }

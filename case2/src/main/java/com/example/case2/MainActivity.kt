@@ -59,14 +59,19 @@ class MainActivity : AppCompatActivity() {
 
         // 使用gradle脚本动态替换Manifest文件中的内容
         // gradle是编译时生效  java代码是运行时生效
-        // 在module的build.gradle文件中配置了编译时替换configChanges逻辑 ：：：见本build.gradle配置
+        // 在module的build.gradle文件中配置了编译时替换configChanges逻辑 见testgradle module中的build.gradle配置
         // 通过gradle脚本修改Manifest文件中的内容，修改完成然后编译一下，在build-intermediates-packaged_manifests查看Manifest文件是否修改成功
+        // gradle脚本通过一系列task进行自动化脚本的构建
+        // gradle脚本一般通过groovy或者是kotlin DSL进行代码的编写
 
-//        BuildConfig.TEST_CONFIG
-
-
-
-
+        // gradlew assembleWUHANDebug   gradlew assembleHANGZHOUDebug
+        // 从BuildConfig中取gradle.properties文件的值
+        Log.e(TAG, "cityName: ${BuildConfig.cityName}")
+        Log.e(TAG, "isApp: ${BuildConfig.isApp}")
+        Log.e(TAG, "url: ${BuildConfig.url}")
+        // 获取resValue 里面配置的值
+        Log.e(TAG, "resValue: ${resources.getString(R.string.welcome)}")
+        // BuildConfigField 可以放置在  defaultConfig目录下，也可以放置在 buildTypes - release/debug 目录下
 
         // android 反编译
         // 需要使用这三个软件： apktool、dex2jar和JD-gui
@@ -79,8 +84,10 @@ class MainActivity : AppCompatActivity() {
 
         // Build栏目下 Make Project 和Rebuild Project的区别
         // Make Project 是增量编译，不Clean，比Rebuild Project快
-        // Rebuild Project 是先Clean再编译，速度比较慢
+        // Rebuild Project 和Clean Project的功能差不多，都是先删除之前的编译文件再生成新编译的文件
 
+        // android 嵌入式学习
+        // 嵌入式平台：wince（微软）、linux、android、QNX（黑莓 quick unix 嵌入式实时操作系统）、AliOS、IOS、特斯拉车载操作系统
     }
 
     override fun onDestroy() {

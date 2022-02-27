@@ -2,7 +2,8 @@ import groovy.xml.XmlUtil
 
 ext {
     // 这里可能会出现不生效情况
-    android.applicationVariants.all { variant ->
+    android.applicationVariants.all { variant ->   // application module使用
+//    android.libraryVariants.all { variant ->         // lib module使用
         variant.outputs.each { output ->
             // 如果上面不生效，从这里开始引用使用
             def task = output.processManifestProvider.get()

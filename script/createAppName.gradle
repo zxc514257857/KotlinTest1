@@ -1,0 +1,12 @@
+ext {
+    android.applicationVariants.all{ variant ->
+        variant.outputs.all { output ->
+            if (output.outputFile != null && output.outputFile.name.endsWith('.apk') && 'release'.equals(variant.buildType.name)) {
+                def flavorName = variant.flavorName.startsWith("_") ? variant.flavorName.substring(1) : "app"
+                // channel_app_1.0.apk
+                def fileName = "channel_${flavorName}_${variant.versionName}_${versionName}.apk"
+                outputFileName = fileName
+            }
+        }
+    }
+}
