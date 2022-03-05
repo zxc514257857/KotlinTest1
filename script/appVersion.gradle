@@ -1,11 +1,18 @@
+// ext的骚操作
 ext {
+    // rootProject.ext.version.code
     version = [
             code: 1,
     ]
 }
 ext.version = [
+        // rootProject.ext.version.name
         name : '1.0.0'
 ]
+ext {
+    // rootProject.ext.arouterCompilerVersion
+    arouterCompilerVersion = '1.2.2'
+}
 
 // gradle task的生命周期
 task task1 {

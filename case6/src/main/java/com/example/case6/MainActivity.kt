@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.alibaba.fastjson.JSON
+import com.example.officialaccounttest.Person1
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
 import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
@@ -22,6 +24,7 @@ import kotlin.concurrent.thread
  * https://www.jianshu.com/p/4da8968ec305
  * 2、fastjson和gson都用一下：序列化和反序列化；自定义工具类来进行反序列化
  * Gson反序列化泛型丢失问题
+ * MoShi 序列化反序列化工具
  * 3、expose和 transient 限定数据Bean的序列化和反序列化
  * 4、StrictMode 性能调优利器   https://blog.csdn.net/weixin_40763897/article/details/89018306
  *   https://blog.csdn.net/mynameishuangshuai/article/details/51742375
@@ -37,6 +40,15 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
+
+    private val moshi by lazy(mode = LazyThreadSafetyMode.NONE) {
+        Moshi.Builder()
+            // String为null
+            .add(MoshiDefaultAdapterFactory.FACTORY)
+            // 集合为null
+            .add(MoshiDefaultCollectionJsonAdapterFactory.FACTORY)
+            .build()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -296,6 +308,8 @@ class MainActivity : AppCompatActivity() {
             TAG,
             "people2: ${people2?.name},,,${people2?.age},,,${people2?.sex},,,${people2?.country}"
         )
+        // moshi 序列化和反序列化工具
+        moShiTest()
 
         // StrickMode 性能调优利器
         initStrickMode()
@@ -356,6 +370,152 @@ class MainActivity : AppCompatActivity() {
                 }
                 resultMap
             }).create()
+    }
+
+    private fun moShiTest() {
+        val a = "hello"
+        val b = "world"
+        val c = "$a $b"
+        val d = "$a $b！"
+        val e = a.plus(" ").plus(b)
+        val f = a.plus(" ").plus(b).plus("！")
+
+        val sb = StringBuilder()
+        val g = sb.append(a).append(" ").append(b)
+        val h = sb.append(a).append(" ").append(b).append("！")
+        // 1、建议字符串拼接还是使用StringBuilder和StringBuffer，不要使用plus
+        // StringBuilder比StringBuffer出来得早，StringBuilder线程安全，StringBuffer效率更高
+        // 通过Tools-kotlin-show kotlin bytecode-decompile 来显示kotlin转的java代码
+
+        // 2、默认的lazy mode是SYNC（线程安全的，适合多线程使用），NONE（线程不安全的，适合单线程使用）
+        val str1: String by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            "str1"
+        }
+
+        testPerson1()
+        testPerson2()
+        testPerson3()
+        testPerson4()
+        testPerson5()
+        testPerson6()
+        testPerson7()
+        testPerson8()
+        testPerson9()
+    }
+
+    // 进了里面都是静态
+    companion object {
+        // 我是一个半常量，有get方法，没有set方法
+        val test1 = "TEST_1"
+
+        // const 只能用在object类或者top-level类中。并和val一起使用
+        // companion object 里面放常量的话用const val
+        // 我就是一个常量，所以设置成public的并且不需要get set方法
+        const val test2 = "TEST_2"
+
+        // 我是一个私有半常量，没有get set方法
+        private val test3 = "TEST_3"
+        private const val test4 = "TEST_4"
+
+        // 我表明了是一个变量，一定有get set方法
+        var test11 = "TEST_11"
+
+        // 我是一个私有变量，没有final修饰，也没有get set方法
+        private var test33 = "TEST_33"
+    }
+
+    // 我是一个公有半常量，有get 没有set方法
+    val test5 = "TEST_5"
+
+    // 我是一个私有半常量
+    private val test6 = "TEST_6"
+
+    // test7和test11的区别就是一个是static 一个不是
+    var test7 = "TEST_7"
+
+
+    // 4、什么时候inline 内联函数，就是让这个方法在调用的时候，直接显示方法内容的函数
+    // inline内联关键字加不加，功能上影响不大，主要是将函数内容提前，提高性能
+    // 内联函数一般是用在 使用lambda表达式作为参数的函数中
+    fun foo1(body: () -> Unit) {
+        println("foo() hahaha")
+        ordinaryFunction(body)
+    }
+
+    inline fun ordinaryFunction(block: () -> Unit) {
+        println("hahha")
+        block.invoke()
+        println("hahha233333")
+    }
+
+    // 5、使用moshi替换Gone和fastjson进行json解析
+    // MoShi的使用方法：
+    // 1.添加两个依赖   2.添加一个kapt插件   3.在bean类上添加注解
+    private fun testPerson1() {
+        // 没有name和age，显示的是默认值
+        val json = """{}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person1:::$person")
+    }
+
+    private fun testPerson2() {
+        // 没有name，显示的是name的默认值
+        val json = """{"age": 17}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person2:::$person")
+    }
+
+    private fun testPerson3() {
+        // name、age都为正常值
+        val json = """{"name":"aaa", "age":12}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person3:::$person")
+    }
+
+    private fun testPerson4() {
+        // name、age都为正常值，多了一个country字段。这个没事儿，相当于是没解析
+        val json = """{"name":"aaa", "age":12, "country":"china"}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person4:::$person")
+    }
+
+    private fun testPerson5() {
+        // 没有age字段，多了一个country字段。这个也没事儿，相当于是age用默认值，country不解析，为null也是可以的
+        val json = """{"name":"aaa", "country":"china"}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person5:::$person")
+    }
+
+    private fun testPerson6() {
+        // 一个或多个String字段为null时，对应的字段结果为空串
+        val json = """{"name":null, "age":11}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person6:::$person")
+    }
+
+    private fun testPerson7() {
+        // 一个或多个集合字段为null时，对应的字段结果为空集合
+        val json = """{"name":null, "age":11, "hobby":null}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person7:::$person")
+    }
+
+    private fun testPerson8() {
+        // 一个或多个集合字段为null时，对应的字段结果为空集合
+        val json = """{"name":null, "age":11, "hobby":null}"""
+        val person = moshi.adapter(Person1::class.java).fromJson(json)
+        println("person8:::$person")
+    }
+
+    private fun testPerson9() {
+        try {// 当数组为null的时候，还是会报这个错： com.squareup.moshi.JsonDataException: Non-null value 'friend' was null at $.friend
+            // 这里没有处理掉
+            val json = """{"name":null, "age":11, "hobby":null, "friend":null}"""
+            val person = moshi.adapter(Person1::class.java).fromJson(json)
+            println("person9:::$person")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun initStrickMode() {

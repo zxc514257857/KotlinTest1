@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    // 如果使用kapt 需要在这里引入 kotlin-kapt插件
+    id 'kotlin-kapt'
 }
 
 android {
@@ -46,4 +48,8 @@ dependencies {
     // gson和fastjson
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.alibaba:fastjson:1.1.72.android'
+    // moshi
+    implementation 'com.squareup.moshi:moshi:1.12.0'
+    // kapt就是之前的 annotationProcessor（kapt就是kotlin的apt，即kotlin的编译时注解）
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.12.0'
 }

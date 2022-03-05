@@ -1,14 +1,16 @@
 package com.example.case7;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.apt_annotation.Print;
 import com.example.apt_annotation.TestAnno;
+import com.example.lib_net.NetServer;
 
-import java.security.PrivateKey;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 1.java注解 https://juejin.cn/post/6982471491568812040
@@ -25,6 +27,37 @@ import java.security.PrivateKey;
  * 3.推送的通知和透传
  * 4.git merge 合并分支
  * 5.kotlin基础知识归纳
+ * 6.gradle依赖配置的关键字
+ * 依赖项有三种：module依赖、lib依赖和 远程依赖
+ * implementation project(path: ':log')
+ * implementation files('libs/alipay.aar')  // 添加jar包或aar依赖时使用
+ * implementation fileTree(dir: 'libs', include: ['*.jar']) // 添加jar包或aar依赖时使用
+ * implementation 'com.google.code.gson:gson:2.8.5'
+ * https://blog.csdn.net/smallbabylong/article/details/106219930
+ * ext{} 是指额外属性 extra的缩写    rootProject.ext.xxx
+ * 依赖配置有：implementation、api、compileOnly、runtimeOnly，差异在构建内容以及参与构建的时机
+ * compile 被implementation和api取代
+ * provided 被compileOnly取代
+ * apk 被runtimeOnly取代
+ * <p>
+ * api的依赖是可以传递的， moduleA api依赖 moduleB ， moduleB api依赖 moduleC，则A可以调用C中的方法
+ * 如果moduleB不让A调用C中的方法，则需要将moduleB implementation依赖 moduleC。使用implementation实现了依赖隔离
+ * api依赖 编译的速度比implementation 依赖的速度要慢一点。因为api依赖动了一个节点，整个链都需要重新编译。implemetation依赖只会影响到它可以调用的节点
+ * api依赖表示module需要对外的，implementation表示module不需要对外，只需要对内的
+ * <p>
+ * compileOnly 表示只在编译时生效，不会参与打包。只是为了解决编译时找不到类的问题，运行时不予处理
+ * runtimeOnly 表示只在运行时生效，不会参与编译。很少使用
+ * testImplementation 在单元测试的编译以及打test包时有效
+ * debugImplementation 在debug模式的编译以及打debug包时有效
+ * releaseImplementation 在releae模式的编译以及打release包时有效
+ * 如果想在debug模式下使用，在release模式下不使用，则 debugImplementation 'com.github.DingProg.NetworkCaptureSelf:library:v1.0.1'
+ * <p>
+ * 7.gradle查看并输出依赖树  查看依赖树 gradlew app:dependencies
+ * 输出依赖树： gradlew -q :app:dependencies > log.txt
+ * 8.anr系统有自己保存的日志：/data/anr/traces.txt
+ * 采报错的日志用的是tombstone。墓碑日志
+ * log日志上传用的是自己的日志上传框架
+ * 9.adb monkey的使用
  */
 @TestAnno
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
         // Kotlin中的Companion Object伴生对象就是static静态的意思，可以通过类名点进行调用
         // Companion Object伴生对象、init、构造方法三者之间的执行顺序
         // Companion Object先执行、init再执行、构造方法最后执行（无参构造先执行、有参构造后执行）
+
         // ctrl + H 查看类的继承关系
+
         // const val和val的区别
         // const必须修饰val  const val 表示public static final
         // val表示 public static final 即静态常量
@@ -69,16 +104,56 @@ public class MainActivity extends AppCompatActivity {
         // const val 只能在Companion Object环境下使用
         // private const val 就等同于val
         // open表示 打开，可继承。。kotlin默认是final类型的，即不可继承的
+
         // Java转Kotlin 即Kotlin转Java方法：
         // Java转Kotlin，右键最后一个选项即可
         // Kotlin转Java，Tools - kotlin - show kotlin bytecode
+
         // Object的使用场景：声明单例对象object Person{}、声明伴生对象Companion object{}、声明对象表达式 object:View.OnClickListener{}
         // lateinit 使用报错：'lateinit' modifier is not allowed on properties of primitive types
         // lateinit不能使用在八种基本数据类型上
+
         // object类和data类的区别：object声明类表示单例类。data声明类表示数据类  data类使用必须要用有参构造
         // 继承一个类，重写类里面的方法，如果满足一个判断，则自己实现一个判断逻辑，else就使用super.xxx父类的逻辑
         // 查看项目中的所有断点：Run - View Breakpoints...
+
         // Debug设置学习  Debug Type设置:Java only  通过Debug计算器进行断点调试
 
+        // 在右侧的gradle Tasks - other 中找到assemble 的一些打渠道包的命令
+
+        // kotlin范围限定修饰符
+        // 我们在这里所说的范围是指：Project、Module、class类和子类
+        // public > internal > protected > private
+        // public在整个Project中可使用
+        // internal在整个Module中可使用
+        // protected在本类和子类（继承类）中可使用
+        // private在本类中可使用
+
+        // adb monkey的使用
+        // -p 指定包名
+        // --ignore-crashes 忽略crash，继续执行
+        // --ignore-timeouts 忽略anr，继续执行
+        // --ignore-security-exception 忽略许可错误，继续执行
+        // --throttle 300  设置事件300毫秒延时
+        // --monitor-native-crashes  监视并报告native层发送的崩溃代码
+        // -v -v -v 提供最详细的信息
+        // adb shell monkey -p com.whpe.pos.hubei.wuhan -v -v -v --ignore-crashes 10
+        // -f加载monkey脚本文件进行测试（表示加载monkey script用最全的日志运行500次）
+        // adb shell monkey -f sdcard/MonkeyScriptPress.txt -v -v -v 500
+        // 停止monkey脚本
+        // adb shell ps | findstr monkey  // 找到monkey的pid（一般pid在第一列和第二列显示）或者 adb shell ps | grep monkey
+        // adb shell kill xxx(pid)   // 杀死的pid号
+        // monkey script 的相关博客：https://www.cnblogs.com/bling123/p/8529521.html
+
+        NetServer.Companion.getInstance("https://api.github.com/").getMerchantInfo("zxc514257857", "AndroidUtilCodeTest")
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(merchantInfoBean -> {
+                    Log.e("TAG", "getMerchantInfo: success111,,," + merchantInfoBean);
+                }, throwable -> {
+                    Log.e("TAG", "getMerchantInfo: error111");
+                }, () -> {
+                    Log.e("TAG", "getMerchantInfo: complete111");
+                });
     }
 }
