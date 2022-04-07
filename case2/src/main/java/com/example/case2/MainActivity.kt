@@ -12,7 +12,7 @@ import com.blankj.utilcode.util.ActivityUtils
 /**
  * 1、application lib和android lib的不同
  * 2、静态变量的生命周期是整个应用程序
- * 3、gradle脚本的使用
+ * 3、gradle脚本的使用   https://www.cnblogs.com/dazhao/p/6692416.html
  * 4、android反编译工具的使用
  * 5、make project和rebuild project的区别
  */

@@ -28,6 +28,10 @@
       <module name="KotlinTest1.case5" target="1.8" />
       <module name="KotlinTest1.case6" target="1.8" />
       <module name="KotlinTest1.case7" target="1.8" />
+      <module name="KotlinTest1.case8" target="1.8" />
+      <module name="KotlinTest1.case9" target="1.8" />
+      <module name="KotlinTest1.lib-net" target="1.8" />
+      <module name="KotlinTest1.lib-pojo" target="1.8" />
       <module name="KotlinTest1.testgradle" target="1.8" />
     </bytecodeTargetLevel>
   </component>

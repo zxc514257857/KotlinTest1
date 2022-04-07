@@ -2,16 +2,17 @@ apply from: "./script/config.gradle"  // 引用全局配置
 apply from: "./script/appVersion.gradle"
 
 buildscript {
-    ext {
-        kotlin_version = '1.5.31'
-    }
+    ext.kotlin_version = '1.5.31'
+
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.2.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // greendao 插件
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.3.0'
     }
 }
 
@@ -19,7 +20,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 

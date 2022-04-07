@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // private const val 就等同于val
         // open表示 打开，可继承。。kotlin默认是final类型的，即不可继承的
 
-        // Java转Kotlin 即Kotlin转Java方法：
+        // Java转Kotlin 及Kotlin转Java方法：
         // Java转Kotlin，右键最后一个选项即可
         // Kotlin转Java，Tools - kotlin - show kotlin bytecode
 
@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
         // object类和data类的区别：object声明类表示单例类。data声明类表示数据类  data类使用必须要用有参构造
         // 继承一个类，重写类里面的方法，如果满足一个判断，则自己实现一个判断逻辑，else就使用super.xxx父类的逻辑
-        // 查看项目中的所有断点：Run - View Breakpoints...
+        // 查看项目中的所有断点：Run - View Breakpoints...   或者在打断点位置 右键弹框的左下角可以看到
+        // 断点学习：一个是贴近线程、一个是断点计算器
 
         // Debug设置学习  Debug Type设置:Java only  通过Debug计算器进行断点调试
 
