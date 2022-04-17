@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
         // sqlite数据库查询命令
         // adb shell
-        // cd sdcard/Download/whpe/runshare/com.whpe.pos.hubei.wuhan/
+        // cd sdcard/Download/whpe/runshare/com.xxx.xxx/
         // sqlite3 whpepos.db
         // .table
         // select version_index,count(*) from PHYSIC_CARD_NOBLACK_LIST_ENTITY group by version_index;

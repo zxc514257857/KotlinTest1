@@ -17,7 +17,7 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.1/ed28ded51a8b1c6b112568def5f4b455e6809019/j2objc-annotations-1.1.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.17/f97ce6decaea32b36101e37979f8b647f00681fb/animal-sniffer-annotations-1.17.jar" />
         </processorPath>
-        <module name="KotlinTest1.apt-processor" />
+        <module name="WorkTest1.apt-processor" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.7">
@@ -33,6 +33,19 @@
       <module name="KotlinTest1.lib-net" target="1.8" />
       <module name="KotlinTest1.lib-pojo" target="1.8" />
       <module name="KotlinTest1.testgradle" target="1.8" />
+      <module name="WorkTest1.androidutilscodetest" target="1.8" />
+      <module name="WorkTest1.case1" target="1.8" />
+      <module name="WorkTest1.case2" target="1.8" />
+      <module name="WorkTest1.case3" target="1.8" />
+      <module name="WorkTest1.case4" target="1.8" />
+      <module name="WorkTest1.case5" target="1.8" />
+      <module name="WorkTest1.case6" target="1.8" />
+      <module name="WorkTest1.case7" target="1.8" />
+      <module name="WorkTest1.case8" target="1.8" />
+      <module name="WorkTest1.case9" target="1.8" />
+      <module name="WorkTest1.lib-net" target="1.8" />
+      <module name="WorkTest1.lib-pojo" target="1.8" />
+      <module name="WorkTest1.testgradle" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -354,7 +354,7 @@ class MainActivity : AppCompatActivity() {
         printStack()
 
         // Log的日志格式及Log日志的过滤不显示
-        // 2022-01-27 13:15:12.985 8258-8258/com.whpe.pos.hubei.wuhan E/LoggerUtils:  xxx
+        // 2022-01-27 13:15:12.985 8258-8258/com.xxx.xxx E/LoggerUtils:  xxx
         // 日期        时间         PID-TID   包名               log优先级  logtag       logmsg
         // Log日志的过滤不显示     ^(?!.*(AAA|BBB).*$
     }

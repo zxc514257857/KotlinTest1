@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         // --throttle 300  设置事件300毫秒延时
         // --monitor-native-crashes  监视并报告native层发送的崩溃代码
         // -v -v -v 提供最详细的信息
-        // adb shell monkey -p com.whpe.pos.hubei.wuhan -v -v -v --ignore-crashes 10
+        // adb shell monkey -p com.xxx.xxx -v -v -v --ignore-crashes 10
         // -f加载monkey脚本文件进行测试（表示加载monkey script用最全的日志运行500次）
         // adb shell monkey -f sdcard/MonkeyScriptPress.txt -v -v -v 500
         // 停止monkey脚本

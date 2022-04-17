@@ -7,16 +7,6 @@ import android.net.ConnectivityManager
 import android.util.Log
 import android.widget.Toast
 
-/**
- * @Des:
- *
- * @Title: NetStatusBroadcast
- * @Project: FourInOne_ZhenJiang
- * @Package: com.whpe.pos.hubei.wuhan.recevier
- * @Author: symb
- * @Date: 2021年09月27日 17:40
- * @Version:V1.0
- */
 class NetStatusBroadcast : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {

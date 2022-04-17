@@ -15,6 +15,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,4 +52,18 @@ dependencies {
     // greendao 依赖   注意 这里用 3.3.0 会有问题 entity会生成不出来
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'com.blankj:utilcodex:1.31.0'
+    // okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+    // gson - converter
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    // logging-interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    // retrofit rxjava 适配器
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    // multidex    Cannot fit requested classes in a single dex file
+//    implementation 'com.android.support:multidex:1.0.3'
 }
